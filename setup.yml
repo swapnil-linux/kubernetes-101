@@ -1,0 +1,52 @@
+- name: install minikube
+  hosts: localhost
+  connection: local
+  tasks:
+   - name: add docker repository
+     yum_repository:
+       name: docker-ce
+       description: Docker CE
+       baseurl: https://download.docker.com/linux/centos/$releasever/$basearch/stable
+       gpgkey: https://download.docker.com/linux/centos/gpg
+   - name: add kubernetes repository
+     yum_repository:
+       name: Kubernetes
+       description: Kubernetes
+       baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+       gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+   - name: install packages
+     yum:
+       name:
+         - vim
+         - git
+         - docker-ce
+         - docker-ce-cli
+         - conntrack
+         - epel-release
+         - tmux
+         - net-tools
+         - bash-completion
+         - wget
+         - kubelet
+       state: latest
+   - name: install minikube
+     yum:
+       name: https://storage.googleapis.com/minikube/releases/latest/minikube-latest.x86_64.rpm
+       state: present
+   - name: set sysctl
+     sysctl:
+       name: "fs.protected_regular"
+       value: "0"
+       state: present
+       sysctl_set: true
+       reload: true
+   - name: Put SELinux in permissive mode, logging actions that would be blocked.
+     selinux:
+       policy: targeted
+       state: permissive
+
+   - name: cleanup old minikube setup
+     shell: minikube delete --all
+
+   - name: cleanup old cache
+     shell: rm -rf /root/.minikube /root/.kube
