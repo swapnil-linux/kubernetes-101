@@ -3,7 +3,7 @@
 * [1. Understanding Kubernetes](README.md)
   * [Overview of Containers](1.-understanding-kubernetes/overview-of-containers.md)
   * [Kubernetes Components](1.-understanding-kubernetes/kubernetes-components.md)
-  * [The Kubernetes API](1.-understanding-kubernetes/the-kubernetes-api.md)
+  * [Container Runtime Interface (CRI/CRI-O)](1.-understanding-kubernetes/the-kubernetes-api.md)
   * [Understanding Kubernetes Objects](1.-understanding-kubernetes/understanding-kubernetes-objects.md)
   * [Pods](1.-understanding-kubernetes/pods.md)
 * [Deploying Minicube](deploying-minicube.md)
