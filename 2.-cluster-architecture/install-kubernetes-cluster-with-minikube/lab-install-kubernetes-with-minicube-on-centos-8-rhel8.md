@@ -167,3 +167,189 @@ minikube   Ready    control-plane,master   6m27s   v1.23.3   192.168.49.2   <non
 [centos@minicube ~]$ 
 ```
 
+9\. Now that our cluster node is UP and running, we can create our first Pod (which is basically a container), but before that verify if there is already any pod available on the minikube cluster:
+
+```
+[centos@minicube ~]$ kubectl get pods
+No resources found in default namespace.
+[centos@minicube ~]$ 
+```
+
+10\. Lets fire-up a pod
+
+```
+[centos@minicube ~]$ kubectl create deployment hello-minikube --image=k8s.gcr.io/echoserver:1.4
+deployment.apps/hello-minikube created
+[centos@minicube ~]$
+```
+
+11\. Its up and running
+
+```
+[centos@minicube ~]$ kubectl get pods 
+NAME                              READY   STATUS    RESTARTS   AGE
+hello-minikube-7bc9d7884c-2s725   1/1     Running   0          77s
+[centos@minicube ~]$ 
+```
+
+12\. Lets expose it as a service
+
+```
+[centos@minicube ~]$ kubectl expose deployment hello-minikube --type=NodePort --port=8080
+service/hello-minikube exposed
+[centos@minicube ~]$ 
+```
+
+```
+[centos@minicube ~]$ kubectl get service
+NAME             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+hello-minikube   NodePort    10.110.159.230   <none>        8080:30502/TCP   37s
+kubernetes       ClusterIP   10.96.0.1        <none>        443/TCP          14h
+[centos@minicube ~]$ 
+```
+
+13\. Use the below command to get the URL of our simple web app running in a pod
+
+```
+[centos@minicube ~]$ minikube service hello-minikube --url
+http://192.168.49.2:30502
+[centos@minicube ~]$
+```
+
+14\. Use any browser or curl to access the application
+
+```
+[centos@minicube ~]$ curl http://192.168.49.2:30502
+CLIENT VALUES:
+client_address=172.17.0.1
+command=GET
+real path=/
+query=nil
+request_version=1.1
+request_uri=http://192.168.49.2:8080/
+
+SERVER VALUES:
+server_version=nginx: 1.10.0 - lua: 10001
+
+HEADERS RECEIVED:
+accept=*/*
+host=192.168.49.2:30502
+user-agent=curl/7.61.1
+BODY:
+-no body in request-[centos@minicube ~]$ 
+```
+
+15\. Add 2 more nodes to the minicube cluster
+
+```
+[centos@minicube ~]$ minikube node list
+minikube	192.168.49.2
+```
+
+```
+[centos@minicube ~]$ minikube node add
+😄  Adding node m02 to cluster minikube
+❗  Cluster was created without any CNI, adding a node to it might cause broken networking.
+👍  Starting worker node minikube-m02 in cluster minikube
+🚜  Pulling base image ...
+🔥  Creating docker container (CPUs=2, Memory=2200MB) ...
+🐳  Preparing Kubernetes v1.23.3 on Docker 20.10.12 ...
+🔎  Verifying Kubernetes components...
+🏄  Successfully added m02 to minikube!
+[centos@minicube ~]$ 
+```
+
+```
+[centos@minicube ~]$ minikube node add
+😄  Adding node m03 to cluster minikube
+👍  Starting worker node minikube-m03 in cluster minikube
+🚜  Pulling base image ...
+🔥  Creating docker container (CPUs=2, Memory=2200MB) ...
+🐳  Preparing Kubernetes v1.23.3 on Docker 20.10.12 ...
+🔎  Verifying Kubernetes components...
+🏄  Successfully added m03 to minikube!
+[centos@minicube ~]$ 
+```
+
+```
+[centos@minicube ~]$ minikube node list
+minikube	192.168.49.2
+minikube-m02	192.168.49.3
+minikube-m03	192.168.49.4
+[centos@minicube ~]$
+```
+
+```
+[centos@minicube ~]$ kubectl get nodes
+NAME           STATUS   ROLES                  AGE     VERSION
+minikube       Ready    control-plane,master   14h     v1.23.3
+minikube-m02   Ready    <none>                 2m11s   v1.23.3
+minikube-m03   Ready    <none>                 62s     v1.23.3
+[centos@minicube ~]$
+```
+
+16\. Lets scale our deployment to multiple pods
+
+```
+[centos@minicube ~]$ kubectl get deployment
+NAME             READY   UP-TO-DATE   AVAILABLE   AGE
+hello-minikube   1/1     1            1           11m
+```
+
+```
+[centos@minicube ~]$ kubectl scale deployment hello-minikube --replicas=3
+deployment.apps/hello-minikube scaled
+[centos@minicube ~]$ 
+```
+
+```
+[centos@minicube ~]$ kubectl get pods -o wide
+NAME                              READY   STATUS    RESTARTS   AGE   IP           NODE           NOMINATED NODE   READINESS GATES
+hello-minikube-7bc9d7884c-2s725   1/1     Running   0          13m   172.17.0.3   minikube       <none>           <none>
+hello-minikube-7bc9d7884c-l7p2t   1/1     Running   0          43s   172.17.0.2   minikube-m02   <none>           <none>
+hello-minikube-7bc9d7884c-ldb7g   1/1     Running   0          43s   172.17.0.2   minikube-m03   <none>           <none>
+[centos@minicube ~]$ 
+```
+
+{% hint style="info" %}
+You can notice how the application is scaled among the 3 available nodes&#x20;
+{% endhint %}
+
+17\. CleanUp
+
+```
+[centos@minicube ~]$ kubectl delete deployment hello-minikube
+deployment.apps "hello-minikube" deleted
+```
+
+```
+[centos@minicube ~]$ kubectl delete service hello-minikube
+service "hello-minikube" deleted
+[centos@minicube ~]$ 
+```
+
+{% hint style="info" %}
+_**Perform the below steps only if you will no longer use minikube in later exercises**_
+{% endhint %}
+
+```
+[centos@minicube ~]$ minikube stop
+✋  Stopping node "minikube"  ...
+🛑  Powering off "minikube" via SSH ...
+✋  Stopping node "minikube-m02"  ...
+🛑  Powering off "minikube-m02" via SSH ...
+✋  Stopping node "minikube-m03"  ...
+🛑  Powering off "minikube-m03" via SSH ...
+🛑  3 nodes stopped.
+```
+
+```
+[centos@minicube ~]$ minikube delete --all
+🔥  Deleting "minikube" in docker ...
+🔥  Removing /home/centos/.minikube/machines/minikube ...
+🔥  Removing /home/centos/.minikube/machines/minikube-m02 ...
+🔥  Removing /home/centos/.minikube/machines/minikube-m03 ...
+💀  Removed all traces of the "minikube" cluster.
+🔥  Successfully deleted all profiles
+[centos@minicube ~]$ 
+```
