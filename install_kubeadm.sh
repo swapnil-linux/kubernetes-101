@@ -20,19 +20,17 @@ sudo systemctl enable --now kubelet
 
 ##install cri-o
 
-curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_8_Stream/devel:kubic:libcontainers:stable.repo
+sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_8_Stream/devel:kubic:libcontainers:stable.repo
 
 
-curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:1.24.repo https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.24:/1.24.0/CentOS_8_Stream/devel:kubic:libcontainers:stable:cri-o:1.24:1.24.0.repo
+sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:1.24.repo https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.24:/1.24.0/CentOS_8_Stream/devel:kubic:libcontainers:stable:cri-o:1.24:1.24.0.repo
 
-yum install -y cri-o tc vim wget
+sudo yum install -y cri-o tc vim wget
 
-systemctl enable crio
-systemctl start crio
+sudo systemctl enable crio
+sudo systemctl start crio
 
-
-
-modprobe br_netfilter
+sudo modprobe br_netfilter
 
 
 cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
@@ -42,15 +40,15 @@ net.ipv4.ip_forward = 1
 EOF
 
 
-sysctl --system
+sudo sysctl --system
 
 
-echo $(hostname -I) $(hostname) >> /etc/hosts
+echo $(hostname -I) $(hostname) | sudo tee -a /etc/hosts
 
 
-kubeadm config images pull
+sudo kubeadm config images pull -v=1
 
-kubeadm init
+sudo kubeadm init
 
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
