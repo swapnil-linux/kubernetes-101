@@ -23,7 +23,7 @@ CRI is an abstraction for any kind of container runtime you might want to use. S
 
 Instead of the Kubernetes project needing to manually add support for each runtime, the CRI API describes how Kubernetes interacts with each runtime. So then, it’s down to the runtime to actually manage containers. As long as it obeys the CRI API, it can do whatever it likes.
 
-![](<../.gitbook/assets/image (4).png>)
+![](<../.gitbook/assets/image (4) (1).png>)
 
 So if you prefer to use _containerd_ to run your containers, you can. Or, if you prefer to use _CRI-O_, then you can. This is because both of these runtimes implement the CRI specification.
 

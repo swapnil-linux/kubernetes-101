@@ -5,4 +5,5 @@
   * [Kubernetes Components](1.-understanding-kubernetes/kubernetes-components.md)
   * [Container Runtime Interface (CRI/CRI-O)](1.-understanding-kubernetes/the-kubernetes-api.md)
 * [2. Deploying Kubernetes Cluster](2.-cluster-architecture/README.md)
-  * [Install Kubernetes Cluster with minikube](2.-cluster-architecture/install-kubernetes-cluster-with-minikube.md)
+  * [Install Kubernetes Cluster with minikube](2.-cluster-architecture/install-kubernetes-cluster-with-minikube/README.md)
+    * [Lab: Install Kubernetes with minicube on CentOS 8 / RHEL8](2.-cluster-architecture/install-kubernetes-cluster-with-minikube/lab-install-kubernetes-with-minicube-on-centos-8-rhel8.md)

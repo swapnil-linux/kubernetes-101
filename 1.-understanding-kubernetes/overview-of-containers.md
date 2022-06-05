@@ -34,7 +34,7 @@ The first solution was using **Virtual Machines** (VMs)
 
 The ultimate solution to this problem was to provide something that is much more lightweight than VMs - **Docker container** to the rescue.
 
-![](<../.gitbook/assets/image (4) (1).png>)
+![](<../.gitbook/assets/image (4) (1) (1).png>)
 
 
 
