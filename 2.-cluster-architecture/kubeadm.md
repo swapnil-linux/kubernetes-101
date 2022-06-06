@@ -12,4 +12,14 @@ The `kubeadm` tool is good if you need:
 
 You can install and use `kubeadm` on various machines: your laptop, a set of cloud servers, a Raspberry Pi, and more. Whether you're deploying into the cloud or on-premises, you can integrate `kubeadm` into provisioning systems such as Ansible or Terraform.
 
-\
+### &#x20;Prerequisites&#x20;
+
+* One or more machines running a deb/rpm-compatible Linux OS; for example: Ubuntu or CentOS.
+* 2 GiB or more of RAM per machine--any less leaves little room for your apps.
+* At least 2 CPUs on the machine that you use as a control-plane node.
+* Full network connectivity among all machines in the cluster. You can use either a public or a private network.
+
+You also need to use a version of `kubeadm` that can deploy the version of Kubernetes that you want to use in your new cluster.
+
+
+
