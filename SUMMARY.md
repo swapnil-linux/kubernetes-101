@@ -10,3 +10,5 @@
   * [kubeadm](2.-cluster-architecture/kubeadm.md)
   * [Lab: Installing kubernetes cluster using kubeadm](2.-cluster-architecture/lab-installing-kubernetes-cluster-using-kubeadm.md)
 * [3. Kubernetes Namespace](3.-kubernetes-namespace.md)
+* [4. Working with Pods](4.-working-with-pods/README.md)
+  * [Multi-container Pods](4.-working-with-pods/multi-container-pods.md)
