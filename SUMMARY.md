@@ -9,3 +9,4 @@
   * [Lab: Install Kubernetes with minicube on CentOS 8 / RHEL8](2.-cluster-architecture/lab-install-kubernetes-with-minicube-on-centos-8-rhel8.md)
   * [kubeadm](2.-cluster-architecture/kubeadm.md)
   * [Lab: Installing kubernetes cluster using kubeadm](2.-cluster-architecture/lab-installing-kubernetes-cluster-using-kubeadm.md)
+* [3. Kubernetes Namespace](3.-kubernetes-namespace.md)
