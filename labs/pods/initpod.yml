@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: initpod-demo
+  labels:
+    app: initializer
+spec:
+  initContainers:
+  - name: init-con
+    image: busybox
+    command: ['sh', '-c', 'until nslookup webapp; do echo waiting for webapp service; sleep 1; done; echo Service found!']
+  containers:
+    - name: webapp-con
+      image: nginx
+      ports:
+        - containerPort: 80
