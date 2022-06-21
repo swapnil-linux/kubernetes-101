@@ -12,3 +12,4 @@
 * [3. Kubernetes Namespace](3.-kubernetes-namespace.md)
 * [4. Working with Pods](4.-working-with-pods/README.md)
   * [Multi-container Pods](4.-working-with-pods/multi-container-pods.md)
+  * [Lab: Working with Pods](4.-working-with-pods/lab-working-with-pods.md)
