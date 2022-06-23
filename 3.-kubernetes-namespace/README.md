@@ -99,7 +99,7 @@ kube-scheduler-ip-10-0-2-94.ap-southeast-2.compute.internal            1/1     R
 
 ### Creating a namespace
 
-A namespace is a Kubernetes resource like any other, so you can create it by using a YAML file or directly via `kubectl` command.
+A namespace is a Kubernetes resource like any other, so you can create it by using a YAML file or directly via `kubectl` command. You can run the following command to see all Kubernetes API resources (objects) supported by your cluster. The output displays whether an object is namespaced or not.
 
 #### Using YAML file
 
@@ -378,7 +378,9 @@ NOTE:Deleting everything with the all keyword doesn’t delete absolutely everyt
 
 ### Conclusion
 
-In this Kubernetes tutorial we learned all about namespace and how it can be used to allow different teams to use the same cluster as though they were using separate Kubernetes clusters. You may assign different set of quotas and LimitRange to individual namespace.
+In this chapter, you learned that Kubernetes has a technology called Namespaces that can divide a cluster for resource and accounting purposes. Each Namespace can have its own users and RBAC rules, as well as resource quotas. However, they’re not designed as strong boundaries for isolating workloads.
+
+You also learned that many objects are namespaced. If you don’t explicitly target an object at a Namespace, it’ll be deployed to the default Namespace.
 
 
 
