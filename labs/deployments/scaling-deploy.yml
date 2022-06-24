@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: scaling
+    env: prod
+  name: scaling
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: scaling
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: scaling
+        env: prod
+    spec:
+      containers:
+      - image: quay.io/mask365/scaling
+        name: scaling
+        ports:
+        - containerPort: 8080
+        resources: {}
+status: {}
