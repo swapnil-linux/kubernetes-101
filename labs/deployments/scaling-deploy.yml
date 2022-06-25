@@ -20,7 +20,7 @@ spec:
         env: prod
     spec:
       containers:
-      - image: quay.io/mask365/scaling
+      - image: quay.io/mask365/scaling:v1
         name: scaling
         ports:
         - containerPort: 8080
