@@ -14,5 +14,5 @@
 * [4. Working with Pods](4.-working-with-pods/README.md)
   * [Multi-container Pods](4.-working-with-pods/multi-container-pods.md)
   * [Lab: Working with Pods](4.-working-with-pods/lab-working-with-pods.md)
-* [5. Deployments](5.-deployments/README.md)
+* [5. Deployments](5.-deployments.md)
   * [Lab: Managing Deployments](5.-deployments/lab-managing-deployments.md)
