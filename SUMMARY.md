@@ -16,3 +16,4 @@
   * [Lab: Working with Pods](4.-working-with-pods/lab-working-with-pods.md)
 * [5. Deployments](5.-deployments.md)
   * [Lab: Managing Deployments](5.-deployments/lab-managing-deployments.md)
+* [6. Kubernetes Service](6.-kubernetes-service.md)
