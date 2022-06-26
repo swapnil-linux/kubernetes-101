@@ -71,13 +71,13 @@ Since `br_netfilter` is not in the loaded state, lets load this module manually:
 
 ```
 sudo modprobe br_netfilter
-echo options br_netfilter | sudo tee /etc/modprobe.d/br_netfilter.conf
+echo br_netfilter | sudo tee /etc/modules-load.d/br_netfilter.conf
 ```
 
 Now re-verify the module status:
 
 ```
-lsmod | grep br_netfilter
+    lsmod | grep br_netfilter
 ```
 
 \
@@ -105,7 +105,7 @@ echo $(hostname -I) $(hostname) | sudo tee -a /etc/hosts
 
 ```
 sudo kubeadm config images pull -v=1
-sudo kubeadm init
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16,2001:db8:42:0::/56 --service-cidr=10.96.0.0/16,2001:db8:42:1::/112
 ```
 
 
@@ -229,7 +229,12 @@ kube-system   kube-proxy-tlftd                                                  
 kube-system   kube-scheduler-ip-10-0-2-94.ap-southeast-2.compute.internal            1/1     Running   0          30m
 ```
 
-###
+14\. Deploy a pod network to the cluster
+
+```
+curl https://projectcalico.docs.tigera.io/manifests/calico.yaml -O
+kubectl apply -f calico.yaml
+```
 
 ### Enable shell auto-completion (Optional)
 
