@@ -18,3 +18,4 @@
   * [Lab: Managing Deployments](5.-deployments/lab-managing-deployments.md)
 * [6. Kubernetes Service](6.-kubernetes-service/README.md)
   * [Lab: Working with K8S Service](6.-kubernetes-service/lab-working-with-k8s-service.md)
+  * [Service Discovery](6.-kubernetes-service/service-discovery.md)
