@@ -107,3 +107,16 @@ spec:
   selector:
     app: friends
   type: NodePort
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: jump
+  namespace: webapp
+spec:
+  terminationGracePeriodSeconds: 5
+  containers:
+  - image: alpine
+    name: jump
+    tty: true
+    stdin: true
