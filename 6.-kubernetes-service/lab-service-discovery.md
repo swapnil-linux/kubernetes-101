@@ -290,4 +290,18 @@ Any changes to deployment to re-deploy the pod
 
 ![](<../.gitbook/assets/Screen Shot 2022-06-28 at 2.46.20 pm.png>)
 
+12\. Clean up
+
+```
+[centos@ip-10-0-2-94 ~]$ kubectl delete -f ~/kubernetes-101/labs/service/friends-app.yaml 
+namespace "backend" deleted
+namespace "webapp" deleted
+deployment.apps "mysql" deleted
+deployment.apps "friends" deleted
+service "mysql" deleted
+service "friends" deleted
+pod "jump" deleted
+
+```
+
 _**That's how it's done**_ ✅&#x20;
