@@ -24,7 +24,7 @@ Before we understand Kubernetes, we must be familiar with Docker containers or e
 
 The first solution was using **Virtual Machines** (VMs)
 
-![](<../.gitbook/assets/image (5).png>)
+![](<../.gitbook/assets/image (5) (1).png>)
 
 * Instead of running multiple applications, all on the same server, companies would package and **run a single application on each VM**
 * With this, all the compatibility problems were gone and life seemed to be good again.
