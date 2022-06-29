@@ -14,7 +14,7 @@ When defining a pod or namespace based NetworkPolicy, you use a selector to spec
 
 Meanwhile, when IP based NetworkPolicies are created, we define policies based on IP blocks (CIDR ranges).
 
-![](<.gitbook/assets/image (5).png>)
+![](<../.gitbook/assets/image (5).png>)
 
 ### Prerequisites <a href="#prerequisites" id="prerequisites"></a>
 
