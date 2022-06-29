@@ -1,0 +1,20 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-specific
+  namespace: network-policy
+spec:
+  podSelector:
+    matchLabels:
+      run: hello
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: network-test
+        podSelector:
+          matchLabels:
+            run: sample-app
+      ports:
+      - port: 8080
+        protocol: TCP
