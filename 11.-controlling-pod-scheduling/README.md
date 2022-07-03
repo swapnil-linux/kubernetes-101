@@ -1,4 +1,4 @@
-# 12. Controlling Pod Scheduling
+# 11. Controlling Pod Scheduling
 
 ## Kubernetes Scheduler
 
@@ -311,5 +311,37 @@ spec:
 ```
 
 The above Pod will only run on the node `kube-01`.
+
+## Taints and Tolerations
+
+Node affinity, described here, is a property of pods that attracts them to a set of nodes (either as a preference or a hard requirement). Taints are the opposite – they allow a node to repel a set of pods.
+
+Taints and tolerations work together to ensure that pods are not scheduled onto inappropriate nodes. One or more taints are applied to a node; this marks that the node should not accept any pods that do not tolerate the taints. Tolerations are applied to pods, and allow (but do not require) the pods to schedule onto nodes with matching taints.
+
+For example, you could taint the Kubernetes master nodes to make sure only pods with the label foo=bar can run on them. To do so, you would taint the node and add a tolerations field in the pod specification. The taint would be applied like so:
+
+```
+kubectl taint node master foo=bar:NoSchedule
+```
+
+And the pod specification would contain a toleration:
+
+```
+tolerations:
+- key: "foo"
+  operator: "Equal"
+  value: "bar"
+  effect: "NoSchedule"
+```
+
+To remove the taint added by the command above, you can run:
+
+```
+kubectl taint node master foo:NoSchedule-
+```
+
+****
+
+
 
 ###
