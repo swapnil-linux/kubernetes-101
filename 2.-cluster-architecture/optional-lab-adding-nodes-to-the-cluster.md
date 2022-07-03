@@ -131,4 +131,8 @@ ip-10-0-2-77.ap-southeast-2.compute.internal    Ready    worker          7m48s  
 ip-10-0-2-94.ap-southeast-2.compute.internal    Ready    control-plane   6d14h   v1.24.2
 ```
 
+{% hint style="info" %}
+You can choose your node to have any role like `node-role.kubernetes.io/testing=` and `node-role.kubernetes.io/dev=`... The column ROLES will display the value(s) separated by comma in case multiple values exist&#x20;
+{% endhint %}
+
 **tada** :tada:
