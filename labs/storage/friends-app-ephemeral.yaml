@@ -1,0 +1,106 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: myapp2
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mysql
+  name: mysql
+  namespace: myapp2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: docker.io/mysql
+        name: mysql
+        env:
+        - name: MYSQL_USER
+          value: user1
+        - name: MYSQL_PASSWORD
+          value: pass1234
+        - name: MYSQL_DATABASE
+          value: friends
+        - name: MYSQL_ROOT_PASSWORD
+          value: notsostrongpass
+        ports:
+        - containerPort: 3306
+        resources: {}
+---  
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: friends
+  name: friends
+  namespace: myapp2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: friends
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: friends
+    spec:
+      containers:
+      - image: quay.io/mask365/friends:latest
+        name: friends
+        env:
+        - name: MYSQL_USER
+          value: user1
+        - name: MYSQL_PASSWORD
+          value: pass1234
+        - name: MYSQL_DATABASE
+          value: friends        
+        - name: DBHOST
+          value: mysql
+        ports:
+        - containerPort: 8080
+        resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mysql
+  name: mysql
+  namespace: myapp2
+spec:
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    app: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: friends
+  name: friends
+  namespace: myapp2
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+    nodePort: 30200
+  selector:
+    app: friends
+  type: NodePort

@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nfs-on-k8s
+spec: {}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nfs-server
+  name: nfs-server
+  namespace: nfs-on-k8s
+spec:
+  containers:
+  - image: quay.io/mask365/nfs-server:old
+    name: nfs-server
+    env:
+      - name: SHARED_DIRECTORY
+        value: /nfsshare
+    volumeMounts:
+    - mountPath: /nfsshare
+      name: nfsshare
+    ports:
+    - containerPort: 2049
+    resources: {}
+    securityContext:
+      privileged: true
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  hostNetwork: true
+  #nodeName: ip-10-0-2-94.ap-southeast-2.compute.internal
+  volumes:
+  - name: nfsshare
+    hostPath:
+      path: /nfsdata
+      type: Directory

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: myapp2
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc001
+  namespace: myapp2
+spec:
+  storageClassName: nfs-client
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Mi
