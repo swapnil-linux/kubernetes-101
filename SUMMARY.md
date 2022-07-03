@@ -25,7 +25,7 @@
 * [8. Network Policies](8.-network-policies.md)
   * [Lab: Network Policy](8.-network-policies/lab-network-policy.md)
 * [9. Storage](9.-storage.md)
-* [10. ConfigMaps and Secrets](10.-configmaps-and-secrets/README.md)
+* [10. ConfigMaps and Secrets](10.-configmaps-and-secrets.md)
   * [Lab: Injecting configuration data in Pod](10.-configmaps-and-secrets/lab-injecting-configuration-data-in-pod.md)
 * [11. Limit Kubernetes Resources](11.-limit-kubernetes-resources.md)
 * [12. Controlling Pod Scheduling](12.-controlling-pod-scheduling.md)
