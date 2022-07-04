@@ -33,6 +33,5 @@
   * [Lab: Scheduling a pod](11.-controlling-pod-scheduling/lab-scheduling-a-pod.md)
 * [12. Limit Kubernetes Resources](12.-limit-kubernetes-resources/README.md)
   * [Lab: Limit Kubernetes Resources](12.-limit-kubernetes-resources/lab-limit-kubernetes-resources.md)
-* [13. Troubleshooting](13.-statefulsets.md)
-  * [Debug Pods](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+* [13. Troubleshooting Applications](13.-troubleshooting-applications.md)
 * [14. Security](14.-security.md)
