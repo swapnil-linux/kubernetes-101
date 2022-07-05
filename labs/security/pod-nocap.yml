@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: pod-nocap
+  name: pod-nocap
+spec:
+  containers:
+  - args:
+    - sleep
+    - "999999"
+    image: alpine
+    name: pod-nocap
+    resources: {}
+    securityContext:
+      capabilities:
+        drop:
+          - ALL
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

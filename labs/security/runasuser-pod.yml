@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-as-user-guest
+spec:
+  securityContext:
+    runAsUser: 1025
+  containers:
+  - name: one
+    image: alpine:latest
+    command: ["/bin/sleep", "999999"]
+  - name: two
+    image: alpine:latest
+    command: ["/bin/sleep", "999999"]

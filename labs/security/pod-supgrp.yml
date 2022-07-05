@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-supgrp
+spec:
+  securityContext:
+    fsGroup: 555
+    supplementalGroups: [666, 777]
+  containers:
+  - name: one
+    image: alpine:latest
+    command: ["/bin/sleep", "999999"]
+    securityContext:
+      runAsUser: 1025
+    volumeMounts:
+    - name: shared-volume
+      mountPath: /volume
+  - name: two
+    image: alpine:latest
+    command: ["/bin/sleep", "999999"]
+    securityContext:
+      runAsUser: 1026
+    volumeMounts:
+    - name: shared-volume
+      mountPath: /volume
+  volumes:
+  - name: shared-volume
+    emptyDir: {}
