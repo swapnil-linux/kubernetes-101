@@ -33,5 +33,6 @@
   * [Lab: Scheduling a pod](11.-controlling-pod-scheduling/lab-scheduling-a-pod.md)
 * [12. Limit Kubernetes Resources](12.-limit-kubernetes-resources/README.md)
   * [Lab: Limit Kubernetes Resources](12.-limit-kubernetes-resources/lab-limit-kubernetes-resources.md)
-* [13. Troubleshooting Applications](13.-troubleshooting-applications.md)
-* [14. Security](14.-security.md)
+* [13. Troubleshooting Applications](13.-statefulsets.md)
+* [14. Kubernetes Security](14.-kubernetes-security/README.md)
+  * [Lab: Access API server using ServiceAccount within Pod](14.-kubernetes-security/lab-access-api-server-using-serviceaccount-within-pod.md)
