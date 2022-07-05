@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: hello-2
+  name: hello-2
+spec:
+  serviceAccount: newsa1
+  containers:
+  - image: quay.io/mask365/scaling
+    name: hello
+    ports:
+    - containerPort: 8080
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
