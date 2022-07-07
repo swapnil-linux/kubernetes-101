@@ -24,6 +24,11 @@ sudo systemctl enable --now kubelet
 
 ## Add repo for CRI-O
 
+## IF USING RHEL 7 MAKE SURE extras repo is enabled
+subscription-manager repos --enable rhel-7-server-extras-rpms
+
+
+
 export VERSION=1.24
 sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/CentOS_7/devel:kubic:libcontainers:stable.repo
 sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:${VERSION}.repo https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:${VERSION}/CentOS_7/devel:kubic:libcontainers:stable:cri-o:${VERSION}.repo
@@ -31,6 +36,13 @@ sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:${VERSIO
 ## Install/start/enable CRI-O
 
 sudo yum install -y cri-o tc vim wget
+
+## Change Driver to vfs for RHEL 7
+
+sed -i 's/driver = "overlay"/driver = "vfs"/g' /etc/containers/storage.conf
+sed -i 's/# storage_driver = "vfs"/storage_driver = "vfs"/g' /etc/crio/crio.conf
+
+
 sudo systemctl enable --now crio
 
 ## Enable bridge netfilter
