@@ -69,5 +69,5 @@ echo $(hostname -I) $(hostname) | sudo tee -a /etc/hosts
 
 sudo kubeadm config images pull -v=1
 
-sudo kubeadm init
+sudo kubeadm init --cri-socket=unix:///run/crio/crio.sock
 
