@@ -33,7 +33,7 @@ sudo yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
 4\. Enable and start kubelet service using systemctl
 
 ```
-sudo systemctl enable --now kubelet
+sudo systemctl enable kubelet
 ```
 
 5\. Create repo for Kubernetes container runtime, cri-o.&#x20;
@@ -51,10 +51,17 @@ sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:${VERSIO
 
 ```
 
-6\. install and enable cri-o
+6\. install and enable cri-o, along with some other required packages for this course
 
 ```
-sudo yum install -y cri-o tc vim wget
+sudo yum install -y cri-o tc vim wget git 
+```
+
+Change Driver to vfs for RHEL 7
+
+```
+sudo sed -i 's/driver = "overlay"/driver = "vfs"/g' /etc/containers/storage.conf
+sudo sed -i 's/# storage_driver = "vfs"/storage_driver = "vfs"/g' /etc/crio/crio.conf
 ```
 
 ```
@@ -105,7 +112,7 @@ echo $(hostname -I) $(hostname) | sudo tee -a /etc/hosts
 
 ```
 sudo kubeadm config images pull -v=1
-sudo kubeadm init --pod-network-cidr=10.244.0.0/16,2001:db8:42:0::/56 --service-cidr=10.96.0.0/16,2001:db8:42:1::/112
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16,2001:db8:42:0::/56 --cri-socket=unix:///run/crio/crio.sock --service-cidr=10.96.0.0/16,2001:db8:42:1::/112
 ```
 
 
@@ -241,7 +248,7 @@ kubectl apply -f calico.yaml
 Now, this is not a mandatory step but it is useful to get the list of supported options with kubectl just by pressing the TAB key on the keyboard. kubectl provides autocompletion support for Bash and Zsh, which can save you a lot of typing. To enable auto-completion we must first install bash-completion on the respective node. Since we would be using our master node most of the time, so we will install this package only on the controller node:
 
 ```
-dnf -y install bash-completion
+sudo yum -y install bash-completion
 ```
 
 Next execute kubectl completion bash to get the script which would perform the auto completion for kubectl, this would give a long output on the console
