@@ -2,6 +2,7 @@
 
 * [1. Understanding Kubernetes](README.md)
   * [Overview of Containers](1.-understanding-kubernetes/overview-of-containers.md)
+  * [Kubernetes](readme/kubernetes.md)
   * [Kubernetes Components](1.-understanding-kubernetes/kubernetes-components.md)
   * [Container Runtime Interface (CRI/CRI-O)](1.-understanding-kubernetes/the-kubernetes-api.md)
 * [2. Deploying Kubernetes Cluster](2.-cluster-architecture/README.md)
