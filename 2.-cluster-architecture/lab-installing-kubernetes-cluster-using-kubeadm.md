@@ -243,7 +243,7 @@ curl https://projectcalico.docs.tigera.io/manifests/calico.yaml -O
 kubectl apply -f calico.yaml
 ```
 
-### Enable shell auto-completion (Optional)
+### Enable shell auto-completion&#x20;
 
 Now, this is not a mandatory step but it is useful to get the list of supported options with kubectl just by pressing the TAB key on the keyboard. kubectl provides autocompletion support for Bash and Zsh, which can save you a lot of typing. To enable auto-completion we must first install bash-completion on the respective node. Since we would be using our master node most of the time, so we will install this package only on the controller node:
 
@@ -280,4 +280,10 @@ api-versions   certificate    cordon         diff           expose         optio
 apply          cluster-info   cp             drain          get            patch          rollout        top
 ```
 
-&#x20;
+### &#x20;Last Step
+
+Clone the git repo which includes the files required for further lab exercies.
+
+```
+git clone https://github.com/swapnil-linux/kubernetes-101
+```
