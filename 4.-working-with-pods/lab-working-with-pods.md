@@ -3,7 +3,7 @@
 Pre-requisite:
 
 * Kubernetes up and running
-* Clone git repo in home directory
+* Clone git repo in home directory if not already done
 
 ```
 cd ~/

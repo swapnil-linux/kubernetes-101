@@ -240,10 +240,21 @@ kube-system   kube-scheduler-ip-10-0-2-94.ap-southeast-2.compute.internal       
 
 ```
 curl https://projectcalico.docs.tigera.io/manifests/calico.yaml -O
-kubectl apply -f calico.yaml
 ```
 
-### Enable shell auto-completion&#x20;
+We will enabled IPv6 in calico,
+
+```
+diff ~/calico.yaml ~/kubernetes-101/labs/install/calico.yaml
+```
+
+```
+kubectl create -f ~/kubernetes-101/labs/install/calico.yaml
+```
+
+###
+
+### Enable Shell auto-completion
 
 Now, this is not a mandatory step but it is useful to get the list of supported options with kubectl just by pressing the TAB key on the keyboard. kubectl provides autocompletion support for Bash and Zsh, which can save you a lot of typing. To enable auto-completion we must first install bash-completion on the respective node. Since we would be using our master node most of the time, so we will install this package only on the controller node:
 
