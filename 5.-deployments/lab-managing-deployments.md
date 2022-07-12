@@ -275,7 +275,10 @@ Scaling App V3: POD IP: 10.85.0.42
 
 ```
 $ kubectl rollout undo deployment scaling --to-revision=1 ; kubectl rollout status deployment scaling
+```
 
+{% code title="OUTPUT" %}
+```
 deployment.apps/scaling rolled back
 Waiting for deployment "scaling" rollout to finish: 0 out of 5 new replicas have been updated...
 Waiting for deployment "scaling" rollout to finish: 0 out of 5 new replicas have been updated...
@@ -296,6 +299,7 @@ Waiting for deployment "scaling" rollout to finish: 4 of 5 updated replicas are 
 deployment "scaling" successfully rolled out
 [centos@ip-10-0-2-94 ~]$ 
 ```
+{% endcode %}
 
 15\. Notice the change in replicaset and try accessing the application
 
