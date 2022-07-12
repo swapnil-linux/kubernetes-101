@@ -3,12 +3,12 @@
 1. Let's set our current context to namespace `myapp`
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl config set-context --current --namespace myapp
+$ kubectl config set-context --current --namespace myapp
 Context "kubernetes-admin@kubernetes" modified. 
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl config get-contexts 
+$ kubectl config get-contexts 
 CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
 *         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   myapp
 [centos@ip-10-0-2-94 ~]$
@@ -17,7 +17,9 @@ CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPAC
 2\. Create a yaml file for deployment named scaling using `quay.io/mask365/scaling:latest` image using the below command.&#x20;
 
 ```
-kubectl create deployment scaling --image=quay.io/mask365/scaling:v1 --port 8080 --dry-run=client --output yaml | tee /tmp/scaling-deploy.yml
+kubectl create deployment scaling --image=quay.io/mask365/scaling:v1 \ 
+--port 8080 --dry-run=client --output yaml | \ 
+tee /tmp/scaling-deploy.yml
 ```
 
 3\. Edit the yaml to change the `replicas` to `3` and add label as `env=prod`for both deployment and pods specs.
@@ -78,7 +80,7 @@ Compare your file with the one in labs folder
 4\. Use `kubectl create` to deploy it on the cluster.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create -f /tmp/scaling-deploy.yml 
+$ kubectl create -f /tmp/scaling-deploy.yml 
 deployment.apps/scaling created
 [centos@ip-10-0-2-94 ~]$ 
 ```
@@ -86,14 +88,14 @@ deployment.apps/scaling created
 5\. Use the  `kubectl get` and `kubectl describe` commands to see details of Deployments and ReplicaSets.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get deploy -o wide
+$ kubectl get deploy -o wide
 NAME      READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                    SELECTOR
 scaling   3/3     3            3           27s   scaling      quay.io/mask365/scaling:v1   app=scaling
 [centos@ip-10-0-2-94 ~]$ 
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl describe deploy scaling
+$ kubectl describe deploy scaling
 Name:                   scaling
 Namespace:              myapp
 CreationTimestamp:      Fri, 24 Jun 2022 02:21:24 +0000
@@ -115,14 +117,14 @@ Pod Template:
 6\. As mentioned earlier, Deployments automatically create associated ReplicaSets. Verify this with the following command.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get rs -o wide
+$ kubectl get rs -o wide
 NAME                 DESIRED   CURRENT   READY   AGE     CONTAINERS   IMAGES                    SELECTOR
 scaling-5c8b86bcc6   3         3         3       3m55s   scaling      quay.io/mask365/scaling:v1   app=scaling,pod-template-hash=5c8b86bcc6
 [centos@ip-10-0-2-94 ~]$ 
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get pods 
+$ kubectl get pods 
 NAME                       READY   STATUS    RESTARTS   AGE
 scaling-5cf66b5fcc-7t497   1/1     Running   0          2m6s
 scaling-5cf66b5fcc-lqhcw   1/1     Running   0          2m6s
@@ -133,12 +135,12 @@ scaling-5cf66b5fcc-wzw4f   1/1     Running   0          2m6s
 7\. Create NodePort service and access the application
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl expose deployment scaling --type=NodePort 
+$ kubectl expose deployment scaling --type=NodePort 
 service/scaling exposed
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get svc -o wide
+$ kubectl get svc -o wide
 NAME      TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE   SELECTOR
 scaling   NodePort   10.103.216.116   <none>        8080:30298/TCP   72s   app=scaling
 ```
@@ -148,7 +150,7 @@ _Note the service node port, you will need this to access the application_
 {% endhint %}
 
 ```
-[centos@ip-10-0-2-94 ~]$ curl http://localhost:30298
+$ curl http://localhost:30298
 Scaling App V1: POD IP: 10.85.0.30
 ```
 
@@ -166,7 +168,7 @@ Press Ctrl+C to terminate
 {% endhint %}
 
 ```
-[centos@ip-10-0-2-94 ~]$ while sleep 1; do curl http://localhost:`kubectl get svc -o yaml|grep nodePort|awk '{print $3}'`; done
+$ while sleep 1; do curl http://localhost:`kubectl get svc -o yaml|grep nodePort|awk '{print $3}'`; done
 Scaling App V1: POD IP: 10.85.0.31
 Scaling App V1: POD IP: 10.85.0.32
 Scaling App V1: POD IP: 10.85.0.30
@@ -179,13 +181,13 @@ Scaling App V1: POD IP: 10.85.0.32^C
 9\. Run the following imperative commands to scale up to 5 and verify the operation.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl scale deployment scaling --replicas=5
+$ kubectl scale deployment scaling --replicas=5
 deployment.apps/scaling scaled
 [centos@ip-10-0-2-94 ~]$
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get pods
+$ kubectl get pods
 NAME                       READY   STATUS    RESTARTS   AGE
 scaling-5cf66b5fcc-7dp8n   1/1     Running   0          37s
 scaling-5cf66b5fcc-7t497   1/1     Running   0          22m
@@ -199,7 +201,7 @@ scaling-5cf66b5fcc-wzw4f   1/1     Running   0          22m
 
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl edit deployments.apps scaling 
+$ kubectl edit deployments.apps scaling 
 deployment.apps/scaling edited
 [centos@ip-10-0-2-94 ~]$ 
 ```
@@ -217,7 +219,7 @@ deployment.apps/scaling edited
 11\. You can monitor the progress with `kubectl rollout status.`
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl rollout status deployment scaling                                                              
+$ kubectl rollout status deployment scaling                                                              
 Waiting for deployment "scaling" rollout to finish: 3 out of 5 new replicas have been updated...
 Waiting for deployment "scaling" rollout to finish: 3 out of 5 new replicas have been updated...
 Waiting for deployment "scaling" rollout to finish: 3 out of 5 new replicas have been updated...
@@ -241,14 +243,14 @@ deployment "scaling" successfully rolled out
 12\. The following commands show the two `ReplicaSet` objects. The second command shows the config of the old one and that it still references the old image version.&#x20;
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get rs
+$ kubectl get rs
 NAME                 DESIRED   CURRENT   READY   AGE
 scaling-5cf66b5fcc   0         0         0       33m
 scaling-666d89f5b7   5         5         5       110s
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl describe rs scaling-5cf66b5fcc
+$ kubectl describe rs scaling-5cf66b5fcc
 Name:           scaling-5cf66b5fcc
 Namespace:      myapp
 Selector:       app=scaling,pod-template-hash=5cf66b5fcc
@@ -267,14 +269,15 @@ Pod Template:
 13\. And we have application v2 up and running
 
 ```
-[centos@ip-10-0-2-94 ~]$ curl http://localhost:30298
+$ curl http://localhost:30298
 Scaling App V3: POD IP: 10.85.0.42
 ```
 
 14\. The following command uses `kubectl rollout` to revert the application to `revision 1`.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl rollout undo deployment scaling --to-revision=1 ; kubectl rollout status deployment scaling
+$ kubectl rollout undo deployment scaling --to-revision=1 ; kubectl rollout status deployment scaling
+
 deployment.apps/scaling rolled back
 Waiting for deployment "scaling" rollout to finish: 0 out of 5 new replicas have been updated...
 Waiting for deployment "scaling" rollout to finish: 0 out of 5 new replicas have been updated...
@@ -299,21 +302,21 @@ deployment "scaling" successfully rolled out
 15\. Notice the change in replicaset and try accessing the application
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get rs
+$ kubectl get rs
 NAME                 DESIRED   CURRENT   READY   AGE
 scaling-5cf66b5fcc   5         5         5       41m
 scaling-666d89f5b7   0         0         0       10m
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ curl http://localhost:30298
+$ curl http://localhost:30298
 Scaling App V1: POD IP: 10.85.0.49
 ```
 
 16\. Cleanup&#x20;
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl delete all --all -n myapp
+$ kubectl delete all --all -n myapp
 pod "scaling-5cf66b5fcc-64lxj" deleted
 pod "scaling-5cf66b5fcc-b9sgb" deleted
 pod "scaling-5cf66b5fcc-jv2t9" deleted
