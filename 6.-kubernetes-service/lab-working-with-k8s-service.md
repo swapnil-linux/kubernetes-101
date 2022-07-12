@@ -3,21 +3,21 @@
 1. Let's set our current context to namespace `myapp`
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl config set-context --current --namespace myapp
+$ kubectl config set-context --current --namespace myapp
 Context "kubernetes-admin@kubernetes" modified. 
 ```
 
 2\. Create a deployment using `kubectl create deployment` command
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create deployment scaling --image=quay.io/mask365/scaling:v3 --port 8080
+$ kubectl create deployment scaling --image=quay.io/mask365/scaling:v3 --port 8080
 deployment.apps/scaling created
 ```
 
 3\. inspect `dual-stack-svc.yml` file
 
 ```
-[centos@ip-10-0-2-94 ~]$ cat ~/kubernetes-101/labs/service/dual-stack-svc.yml 
+$ cat ~/kubernetes-101/labs/service/dual-stack-svc.yml 
 apiVersion: v1
 kind: Service
 metadata:
@@ -40,7 +40,7 @@ status:
 4\. Deploy it with the following command. This will only work if your cluster supports dual stack networking.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create -f ~/kubernetes-101/labs/service/dual-stack-svc.yml
+$ kubectl create -f ~/kubernetes-101/labs/service/dual-stack-svc.yml
 service/scaling created
 [centos@ip-10-0-2-94 ~]$ 
 ```
@@ -48,14 +48,14 @@ service/scaling created
 5\. List it and describe it with the following commands.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get svc
+$ kubectl get svc
 NAME      TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
 scaling   ClusterIP   10.96.77.182   <none>        8080/TCP   68s
 [centos@ip-10-0-2-94 ~]$ 
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl describe svc scaling 
+$ kubectl describe svc scaling 
 Name:              scaling
 Namespace:         myapp
 Labels:            app=scaling
@@ -77,14 +77,14 @@ Events:            <none>
 6\. Create another service with type as `NodePort`
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl expose deployment scaling --name=scaling-single  --type NodePort
+$ kubectl expose deployment scaling --name=scaling-single  --type NodePort
 service/scaling-single exposed
 ```
 
 7\. List it and describe it and notice the difference&#x20;
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get svc
+$ kubectl get svc
 NAME             TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
 scaling          ClusterIP   10.96.202.48    <none>        8080/TCP         2m18s
 scaling-single   NodePort    10.96.144.226   <none>        8080:31264/TCP   16m
@@ -92,7 +92,7 @@ scaling-single   NodePort    10.96.144.226   <none>        8080:31264/TCP   16m
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl describe svc scaling-single
+$ kubectl describe svc scaling-single
 Name:                     scaling-single
 Namespace:                myapp
 Labels:                   app=scaling
@@ -118,7 +118,7 @@ Events:                   <none>
 Notice how two EndpointSlice objects are created, one for the IPv4 mappings and the other for IPv6.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get endpointslices
+$ kubectl get endpointslices
 NAME                   ADDRESSTYPE   PORTS   ENDPOINTS                            AGE
 scaling-5ttsm          IPv6          8080    2001:db8:42:36:e895:4aab:2fbb:6c43   2m53s
 scaling-dgc9v          IPv4          8080    10.244.44.4                          2m53s
@@ -129,7 +129,7 @@ scaling-single-2jv7p   IPv4          8080    10.244.44.4                        
 9\. Create another deployment with `scaling:v2` image
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create deployment scaling-v2 --image=quay.io/mask365/scaling:v2 --port 8080
+$ kubectl create deployment scaling-v2 --image=quay.io/mask365/scaling:v2 --port 8080
 deployment.apps/scaling-v2 created
 [centos@ip-10-0-2-94 ~]$ 
 ```
@@ -137,10 +137,12 @@ deployment.apps/scaling-v2 created
 10\. edit service `scaling` using `kubectl edit` command to change the selector and notice the difference in endpoints
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl edit svc scaling
+$ kubectl edit svc scaling
 service/scaling edited
 [centos@ip-10-0-2-94 ~]$ 
 ```
+
+replace the label on line 30 to `env: prod`
 
 ```
     protocol: TCP
@@ -152,7 +154,7 @@ service/scaling edited
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get endpointslices
+$ kubectl get endpointslices
 NAME                   ADDRESSTYPE   PORTS     ENDPOINTS     AGE
 scaling-5ttsm          IPv6          <unset>   <unset>       8m37s
 scaling-dgc9v          IPv4          <unset>   <unset>       8m37s
@@ -163,7 +165,7 @@ scaling-single-2jv7p   IPv4          8080      10.244.44.4   22m
 11\. Label both pods with the new labels so that `scaling` service points to both pods
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get pods --show-labels 
+$ kubectl get pods --show-labels 
 NAME                          READY   STATUS    RESTARTS   AGE     LABELS
 scaling-ffb48c86c-4x8vb       1/1     Running   0          6m50s   app=scaling,pod-template-hash=ffb48c86c
 scaling-v2-75fd89d465-cxvh6   1/1     Running   0          6m50s   app=scaling-v2,pod-template-hash=75fd89d465
@@ -171,13 +173,10 @@ scaling-v2-75fd89d465-cxvh6   1/1     Running   0          6m50s   app=scaling-v
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl label pod scaling-ffb48c86c-4x8vb env=prod
+$ kubectl label `kubectl get pods -o name` env=prod
 pod/scaling-ffb48c86c-4x8vb labeled
-
-
-[centos@ip-10-0-2-94 ~]$ kubectl label pod scaling-v2-75fd89d465-cxvh6 env=prod
 pod/scaling-v2-75fd89d465-cxvh6 labeled
-[centos@ip-10-0-2-94 ~]$ 
+
 ```
 
 {% hint style="info" %}
@@ -189,7 +188,7 @@ Pod names will differ then what should in the above output
 12\. Notice the `endpointslices`  now point to both the pods
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get endpointslices
+$ kubectl get endpointslices
 NAME                   ADDRESSTYPE   PORTS   ENDPOINTS                                                               AGE
 scaling-5ttsm          IPv6          8080    2001:db8:42:36:e895:4aab:2fbb:6c45,2001:db8:42:36:e895:4aab:2fbb:6c46   25m
 scaling-dgc9v          IPv4          8080    10.244.44.6,10.244.44.7                                                 25m
@@ -200,7 +199,7 @@ scaling-single-2jv7p   IPv4          8080    10.244.44.6                        
 13\. Clean up
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl delete all --all -n myapp
+$ kubectl delete all --all -n myapp
 pod "scaling-ffb48c86c-4x8vb" deleted
 pod "scaling-v2-75fd89d465-cxvh6" deleted
 service "scaling" deleted

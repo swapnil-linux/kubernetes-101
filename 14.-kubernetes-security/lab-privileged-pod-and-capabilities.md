@@ -50,7 +50,7 @@ Inspite of being root we are not able to ping as the pod lacks NET\_BROADCAST ca
 3\. Lets create a Privileged Pod and try the same
 
 ```
-[centos@ip-10-0-2-94 ~]$ cat ~/kubernetes-101/labs/security/pod-priv.yml
+$ cat ~/kubernetes-101/labs/security/pod-priv.yml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -73,17 +73,16 @@ spec:
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create -f ~/kubernetes-101/labs/security/pod-priv.yml
+$ kubectl create -f ~/kubernetes-101/labs/security/pod-priv.yml
 pod/pod-priv created
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl exec -it pod-priv -- sh
+$ kubectl exec -it pod-priv -- sh
 / # 
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl exec -it pod-priv -- sh
 / # apk add libcap
 fetch https://dl-cdn.alpinelinux.org/alpine/v3.16/main/x86_64/APKINDEX.tar.gz
 fetch https://dl-cdn.alpinelinux.org/alpine/v3.16/community/x86_64/APKINDEX.tar.gz
@@ -128,7 +127,7 @@ As there are much more capabilities, we are able to ping.
 4\. Lets create another pod, only with the required capability
 
 ```
-[centos@ip-10-0-2-94 ~]$ cat ~/kubernetes-101/labs/security/pod-ping.yml
+$ cat ~/kubernetes-101/labs/security/pod-ping.yml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -158,19 +157,18 @@ As you can check under capabilities section, I have explicitly allowed `NET_BROA
 Let's create this pod:
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create -f ~/kubernetes-101/labs/security/pod-ping.yml
+$ kubectl create -f ~/kubernetes-101/labs/security/pod-ping.yml
 pod/pod-ping created
 ```
 
 5\. Lets check the capabilities and try ping.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl exec -it pod-ping -- sh
+$ kubectl exec -it pod-ping -- sh
 / # 
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl exec -it pod-ping -- sh
 / # apk add libcap
 fetch https://dl-cdn.alpinelinux.org/alpine/v3.16/main/x86_64/APKINDEX.tar.gz
 fetch https://dl-cdn.alpinelinux.org/alpine/v3.16/community/x86_64/APKINDEX.tar.gz
@@ -214,7 +212,7 @@ Guessed mode: HYBRID (4)
 6\.  Let's create another pod with no capabilities.
 
 ```
-[centos@ip-10-0-2-94 ~]$ cat ~/kubernetes-101/labs/security/pod-nocap.yml
+$ cat ~/kubernetes-101/labs/security/pod-nocap.yml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -239,14 +237,14 @@ spec:
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create -f ~/kubernetes-101/labs/security/pod-nocap.yml
+$ kubectl create -f ~/kubernetes-101/labs/security/pod-nocap.yml
 pod/pod-nocap created
 ```
 
 7\. And lets check the capabilities
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl exec -it pod-nocap -- sh
+$ kubectl exec -it pod-nocap -- sh
 / #
 ```
 
@@ -307,7 +305,7 @@ drwxr-xr-x    2 root     root             6 Jul  5 06:29 test-user
 9\. Clean Up.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl delete all --all -n security-lab 
+$ kubectl delete all --all -n security-lab 
 pod "alpine" deleted
 pod "con-as-user-guest" deleted
 pod "hello-1" deleted

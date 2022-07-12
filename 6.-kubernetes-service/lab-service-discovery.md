@@ -3,7 +3,7 @@
 1. Inspect the `friends-app.yaml` in your labs folder. This defines 2 namespaces, 2 deployments and 2 services. Also node the environment variables defined in both deployments.
 
 ```
-[centos@ip-10-0-2-94 ~]$ cat ~/kubernetes-101/labs/service/friends-app.yaml 
+$ cat ~/kubernetes-101/labs/service/friends-app.yaml 
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -132,7 +132,7 @@ spec:
 2\. Deploy the configuration to your cluster.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create -f  ~/kubernetes-101/labs/service/friends-app.yaml 
+$ kubectl create -f  ~/kubernetes-101/labs/service/friends-app.yaml 
 namespace/backend created
 namespace/webapp created
 deployment.apps/mysql created
@@ -146,7 +146,8 @@ pod/jump created
 3\. Check it was correctly applied.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get all -n webapp
+$ kubectl get all -n webapp
+
 NAME                           READY   STATUS    RESTARTS   AGE
 pod/friends-56bffccd77-trtw7   1/1     Running   0          55s
 pod/jump                       1/1     Running   0          55s
@@ -163,24 +164,25 @@ replicaset.apps/friends-56bffccd77   1         1         1       55s
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get all -n webapp
-NAME                           READY   STATUS    RESTARTS   AGE
-pod/friends-56bffccd77-m4bsn   1/1     Running   0          35s
+$ kubectl get all -n backend
 
-NAME              TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
-service/friends   NodePort   10.96.184.57   <none>        8080:30200/TCP   35s
+NAME                         READY   STATUS              RESTARTS   AGE
+pod/mysql-67865878ff-8v7vl   0/1     ContainerCreating   0          36s
 
-NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/friends   1/1     1            1           35s
+NAME            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+service/mysql   ClusterIP   10.96.233.28   <none>        3306/TCP   36s
 
-NAME                                 DESIRED   CURRENT   READY   AGE
-replicaset.apps/friends-56bffccd77   1         1         1       35s
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/mysql   0/1     1            0           36s
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/mysql-67865878ff   1         1         0       36s
 ```
 
 4\. Connect to the `jump` Pod.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl -n webapp exec -it jump -- sh
+$ kubectl -n webapp exec -it jump -- sh
 / # 
 ```
 
@@ -278,7 +280,7 @@ We see this error because the webapp does not have the DBHOST variable set.&#x20
 10\. Lets add another environment variable and try connecting to the app again
 
 ```
-[centos@ip-10-0-2-94 service]$ kubectl set env -n webapp deployment friends --env DBHOST=mysql.backend.svc.cluster.local
+$ kubectl set env -n webapp deployment friends --env DBHOST=mysql.backend.svc.cluster.local
 deployment.apps/friends env updated
 ```
 
@@ -293,7 +295,7 @@ Any changes to deployment to re-deploy the pod
 12\. Clean up
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl delete -f ~/kubernetes-101/labs/service/friends-app.yaml 
+$ kubectl delete -f ~/kubernetes-101/labs/service/friends-app.yaml 
 namespace "backend" deleted
 namespace "webapp" deleted
 deployment.apps "mysql" deleted

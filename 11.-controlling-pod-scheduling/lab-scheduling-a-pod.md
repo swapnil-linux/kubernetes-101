@@ -3,7 +3,7 @@
 1. Create a pod with `nodeSelector` as `disktype=ssd`
 
 ```
-[centos@ip-10-0-2-94 ~]$ cat ~/kubernetes-101/labs/scheduling/pod.yml 
+$ cat ~/kubernetes-101/labs/scheduling/pod.yml 
 apiVersion: v1
 kind: Pod
 metadata:
@@ -26,14 +26,14 @@ spec:
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create -f ~/kubernetes-101/labs/scheduling/pod.yml
+$ kubectl create -f ~/kubernetes-101/labs/scheduling/pod.yml
 pod/hello created
 ```
 
 2\. check the pod status, it should be in a pending state as we do not have a not with the required label.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get pods 
+$ kubectl get pods 
 NAME    READY   STATUS    RESTARTS   AGE
 hello   0/1     Pending   0          82s
 ```
@@ -41,7 +41,7 @@ hello   0/1     Pending   0          82s
 3\. `kubectl get events` should show more info about the issue
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get events
+$ kubectl get events
 LAST SEEN   TYPE      REASON             OBJECT      MESSAGE
 89s         Warning   FailedScheduling   pod/hello   0/3 nodes are available: 3 node(s) didn't match Pod's node affinity/selector. preemption: 0/3 nodes are available: 3 Preemption is not helpful for scheduling.
 
@@ -50,12 +50,12 @@ LAST SEEN   TYPE      REASON             OBJECT      MESSAGE
 4\. Assign `disktype=ssd` to any one of the nodes and wait for the pod to be scheduled on that node.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl label nodes ip-10-0-2-77.ap-southeast-2.compute.internal disktype=ssd
+$ kubectl label nodes ip-10-0-2-77.ap-southeast-2.compute.internal disktype=ssd
 node/ip-10-0-2-77.ap-southeast-2.compute.internal labeled
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get events
+$ kubectl get events --field-selector type=Warning
 LAST SEEN   TYPE      REASON             OBJECT      MESSAGE
 4m1s        Warning   FailedScheduling   pod/hello   0/3 nodes are available: 3 node(s) didn't match Pod's node affinity/selector. preemption: 0/3 nodes are available: 3 Preemption is not helpful for scheduling.
 4s          Normal    Scheduled          pod/hello   Successfully assigned myapp/hello to ip-10-0-2-77.ap-southeast-2.compute.internal
@@ -65,7 +65,7 @@ LAST SEEN   TYPE      REASON             OBJECT      MESSAGE
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get pods -o wide
+$ kubectl get pods -o wide
 NAME    READY   STATUS    RESTARTS   AGE     IP            NODE                                           NOMINATED NODE   READINESS GATES
 hello   1/1     Running   0          4m53s   10.244.38.3   ip-10-0-2-77.ap-southeast-2.compute.internal   <none>           <none>
 ```
@@ -73,7 +73,7 @@ hello   1/1     Running   0          4m53s   10.244.38.3   ip-10-0-2-77.ap-south
 5\. Inspect the `webserver.yml` and `redis-cache.yml` files.
 
 ```
-[centos@ip-10-0-2-94 scheduling]$ cat ~/kubernetes-101/labs/scheduling/webserver.yml 
+$ cat ~/kubernetes-101/labs/scheduling/webserver.yml 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -114,7 +114,7 @@ spec:
 ```
 
 ```
-[centos@ip-10-0-2-94 scheduling]$ cat ~/kubernetes-101/labs/scheduling/redis-cache.yaml 
+$ cat ~/kubernetes-101/labs/scheduling/redis-cache.yaml 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -148,12 +148,12 @@ spec:
 6\. Create both the deployments using `kubectl create` command and observe how the pods are scheduled based on the `podAffinity` and `podAntiAffinity`
 
 ```
-[centos@ip-10-0-2-94 scheduling]$ kubectl create -f  ~/kubernetes-101/labs/scheduling/webserver.yml 
+$ kubectl create -f  ~/kubernetes-101/labs/scheduling/webserver.yml 
 deployment.apps/web-server created
 ```
 
 ```
-[centos@ip-10-0-2-94 scheduling]$ kubectl get pods
+$ kubectl get pods
 NAME                          READY   STATUS    RESTARTS   AGE
 hello                         1/1     Running   0          20m
 web-server-7c96f6fb77-hx8zn   0/1     Pending   0          3s
@@ -163,12 +163,12 @@ web-server-7c96f6fb77-tvjq7   0/1     Pending   0          3s
 webserver pod is in a pending state as there is not match for the affinity rule.
 
 ```
-[centos@ip-10-0-2-94 scheduling]$ kubectl create -f  ~/kubernetes-101/labs/scheduling/redis-cache.yaml 
+$ kubectl create -f  ~/kubernetes-101/labs/scheduling/redis-cache.yaml 
 deployment.apps/redis-cache created
 ```
 
 ```
-[centos@ip-10-0-2-94 scheduling]$ kubectl get pods -o wide
+$ kubectl get pods -o wide
 NAME                           READY   STATUS              RESTARTS   AGE   IP            NODE                                            NOMINATED NODE   READINESS GATES
 hello                          1/1     Running             0          22m   10.244.38.3   ip-10-0-2-77.ap-southeast-2.compute.internal    <none>           <none>
 redis-cache-7f5555ffc7-ptqn4   0/1     ContainerCreating   0          2s    <none>        ip-10-0-2-77.ap-southeast-2.compute.internal    <none>           <none>
@@ -184,7 +184,7 @@ If you have a single node, only 1 set of pods will be scheduled and the other se
 {% endhint %}
 
 ```
-[centos@ip-10-0-2-94 scheduling]$ kubectl get pods -o wide
+$ kubectl get pods -o wide
 NAME                           READY   STATUS    RESTARTS   AGE    IP             NODE                                            NOMINATED NODE   READINESS GATES
 redis-cache-7f5555ffc7-ptqn4   1/1     Running   0          47s    10.244.38.4    ip-10-0-2-77.ap-southeast-2.compute.internal    <none>           <none>
 redis-cache-7f5555ffc7-vzlgw   1/1     Running   0          47s    10.244.45.67   ip-10-0-2-184.ap-southeast-2.compute.internal   <none>           <none>
@@ -195,7 +195,7 @@ web-server-7c96f6fb77-tvjq7    1/1     Running   0          2m5s   10.244.45.68 
 8\. Remove the `disktype` label from the node which we assigned in the previous step.
 
 ```
-[centos@ip-10-0-2-94 scheduling]$ kubectl describe nodes ip-10-0-2-77.ap-southeast-2.compute.internal |grep -A4 Label
+$ kubectl describe nodes ip-10-0-2-77.ap-southeast-2.compute.internal |grep -A4 Label
 Labels:             beta.kubernetes.io/arch=amd64
                     beta.kubernetes.io/os=linux
                     disktype=ssd
@@ -204,7 +204,7 @@ Labels:             beta.kubernetes.io/arch=amd64
 ```
 
 ```
-[centos@ip-10-0-2-94 scheduling]$ kubectl label nodes ip-10-0-2-77.ap-southeast-2.compute.internal disktype-
+$ kubectl label nodes ip-10-0-2-77.ap-southeast-2.compute.internal disktype-
 node/ip-10-0-2-77.ap-southeast-2.compute.internal unlabeled
 ```
 
@@ -213,7 +213,7 @@ node/ip-10-0-2-77.ap-southeast-2.compute.internal unlabeled
 `preferredDuringSchedulingIgnoredDuringExecution`: The scheduler tries to find a node that meets the rule. If a matching node is not available, the scheduler still schedules the Pod.
 
 ```
-[centos@ip-10-0-2-94 ~]$ cat ~/kubernetes-101/labs/scheduling/pod-nodeAffinity.yml 
+$ cat ~/kubernetes-101/labs/scheduling/pod-nodeAffinity.yml 
 apiVersion: v1
 kind: Pod
 metadata:
@@ -237,12 +237,12 @@ spec:
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create -f ~/kubernetes-101/labs/scheduling/pod-nodeAffinity.yml
+$ kubectl create -f ~/kubernetes-101/labs/scheduling/pod-nodeAffinity.yml
 pod/nginx created
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get pods nginx -o wide
+$ kubectl get pods nginx -o wide
 NAME    READY   STATUS    RESTARTS   AGE     IP             NODE                                            NOMINATED NODE   READINESS GATES
 nginx   1/1     Running   0          2m36s   10.244.45.69   ip-10-0-2-184.ap-southeast-2.compute.internal   <none>           <none>
 ```
@@ -250,7 +250,7 @@ nginx   1/1     Running   0          2m36s   10.244.45.69   ip-10-0-2-184.ap-sou
 10\. CleanUp
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl delete all --all -n myapp
+$ kubectl delete all --all -n myapp
 pod "hello" deleted
 pod "nginx" deleted
 pod "redis-cache-7f5555ffc7-p22tj" deleted

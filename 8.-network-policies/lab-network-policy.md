@@ -3,41 +3,41 @@
 1. Lets start by creating a namespace and setting the context to it.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create ns network-policy
+$ kubectl create ns network-policy
 namespace/network-policy created
-[centos@ip-10-0-2-94 ~]$ 
+
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl config set-context --current --namespace network-policy
+$ kubectl config set-context --current --namespace network-policy
 Context "kubernetes-admin@kubernetes" modified.
-[centos@ip-10-0-2-94 ~]$ 
+ 
 ```
 
 2\. Create 2 pods and services using any image
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl run hello --image=quay.io/mask365/scaling --port 8080 
+$ kubectl run hello --image=quay.io/mask365/scaling --port 8080 
 pod/hello created
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl run test --image=quay.io/mask365/scaling --port 8080 
+$ kubectl run test --image=quay.io/mask365/scaling --port 8080 
 pod/test created
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl expose pod hello
+$ kubectl expose pod hello
 service/hello exposed
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl expose pod test
+$ kubectl expose pod test
 service/test exposed
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get pods,svc 
+$ kubectl get pods,svc 
 NAME        READY   STATUS    RESTARTS   AGE
 pod/hello   1/1     Running   0          51s
 pod/test    1/1     Running   0          44s
@@ -52,48 +52,48 @@ service/test    ClusterIP   10.96.8.175     <none>        8080/TCP   6s
 3\. Use the `kubectl exec`  and `curl` commands to confirm that the test pod can access the hello service and vice versa.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl exec hello -- curl -s http://test:8080
+$ kubectl exec hello -- curl -s http://test:8080
 Scaling App V3: POD IP: 10.244.44.45
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl exec test -- curl -s http://hello:8080
+$ kubectl exec test -- curl -s http://hello:8080
 Scaling App V3: POD IP: 10.244.44.44
 ```
 
 4\. Create the `network-test` namespace and a `pod` and `service` named sample-app.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create ns network-test
+$ kubectl create ns network-test
 namespace/network-test created
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl run sample-app --image=quay.io/mask365/scaling --port 8080 -n network-test
+$ kubectl run sample-app --image=quay.io/mask365/scaling --port 8080 -n network-test
 pod/sample-app created
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl expose pod sample-app -n network-test
+$ kubectl expose pod sample-app -n network-test
 service/sample-app exposed
 ```
 
 5\. Verify that pods in a different namespace can access the hello and test pods in the network-policy namespace.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl exec sample-app -n network-test  -- curl -s http://hello.network-policy.svc.cluster.local:8080
+$ kubectl exec sample-app -n network-test  -- curl -s http://hello.network-policy.svc.cluster.local:8080
 Scaling App V3: POD IP: 10.244.44.44
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl exec sample-app -n network-test  -- curl -s http://test.network-policy.svc.cluster.local:8080
+$ kubectl exec sample-app -n network-test  -- curl -s http://test.network-policy.svc.cluster.local:8080
 Scaling App V3: POD IP: 10.244.44.45
 ```
 
 6\. inspect the `deny-all.yml` file and create the networkpolicy with the `kubectl create` command.
 
 ```
-[centos@ip-10-0-2-94 ~]$ cat ~/kubernetes-101/labs/network-policy/deny-all.yml 
+$ cat ~/kubernetes-101/labs/network-policy/deny-all.yml 
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
@@ -104,14 +104,14 @@ spec:
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create -f ~/kubernetes-101/labs/network-policy/deny-all.yml
+$ kubectl create -f ~/kubernetes-101/labs/network-policy/deny-all.yml
 networkpolicy.networking.k8s.io/deny-all created
 ```
 
 7\. Verify that the test pod can no longer access the hello pod. Wait a few seconds, and then press `Ctrl+C` to exit the curl command that does not reply.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl exec test -- curl -s http://hello:8080
+$ kubectl exec test -- curl -s http://hello:8080
 
 
 ^C
@@ -121,14 +121,14 @@ networkpolicy.networking.k8s.io/deny-all created
 8\. Confirm that the sample-app pod can no longer access the hello and test pod. Wait a few seconds, and then press Ctrl+C to exit the curl command that does not reply.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl exec sample-app -n network-test  -- curl -s http://hello.network-policy.svc.cluster.local:8080
+$ kubectl exec sample-app -n network-test  -- curl -s http://hello.network-policy.svc.cluster.local:8080
 
 ^C
 [centos@ip-10-0-2-94 ~]$ 
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl exec sample-app -n network-test  -- curl -s http://test.network-policy.svc.cluster.local:8080
+$ kubectl exec sample-app -n network-test  -- curl -s http://test.network-policy.svc.cluster.local:8080
 
 ^C
 [centos@ip-10-0-2-94 ~]$ 
@@ -141,7 +141,7 @@ _Ask your instructor to explain this_
 {% endhint %}
 
 ```
-[centos@ip-10-0-2-94 ~]$ cat ~/kubernetes-101/labs/network-policy/allow-specific.yml 
+$ cat ~/kubernetes-101/labs/network-policy/allow-specific.yml 
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
@@ -166,14 +166,14 @@ spec:
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create -f ~/kubernetes-101/labs/network-policy/allow-specific.yml
+$ kubectl create -f ~/kubernetes-101/labs/network-policy/allow-specific.yml
 networkpolicy.networking.k8s.io/allow-specific created
 ```
 
 10\. View the network policies in the network-policy namespace
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get networkpolicies 
+$ kubectl get networkpolicies 
 NAME             POD-SELECTOR   AGE
 allow-specific   run=hello      28s
 deny-all         <none>         6m9s
@@ -182,7 +182,7 @@ deny-all         <none>         6m9s
 11\. Describe  the network-test namespace to check the default label
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl describe namespaces network-test 
+$ kubectl describe namespaces network-test 
 Name:         network-test
 Labels:       kubernetes.io/metadata.name=network-test
 Annotations:  <none>
@@ -200,21 +200,21 @@ The `allow-specific` network policy uses labels to match the name of a namespace
 12\. Verify access to the hello pod in the network-policy namespace
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl exec sample-app -n network-test  -- curl -s http://hello.network-policy.svc.cluster.local:8080
+$ kubectl exec sample-app -n network-test  -- curl -s http://hello.network-policy.svc.cluster.local:8080
 Scaling App V3: POD IP: 10.244.44.44
 ```
 
 13\. Verify there is no access to the test pod. Wait a few seconds, and then press Ctrl+C to exit the curl command that does not reply.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl exec sample-app -n network-test  -- curl -s http://test.network-policy.svc.cluster.local:8080
+$ kubectl exec sample-app -n network-test  -- curl -s http://test.network-policy.svc.cluster.local:8080
 ^C
 ```
 
 14\. Clean Up.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl delete all --all -n network-policy 
+$ kubectl delete all --all -n network-policy 
 pod "hello" deleted
 pod "test" deleted
 service "hello" deleted
@@ -222,13 +222,13 @@ service "test" deleted
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl delete all --all -n network-test 
+$ kubectl delete all --all -n network-test 
 pod "sample-app" deleted
 service "sample-app" deleted
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl config set-context --current --namespace myapp
+$ kubectl config set-context --current --namespace myapp
 Context "kubernetes-admin@kubernetes" modified.
 ```
 

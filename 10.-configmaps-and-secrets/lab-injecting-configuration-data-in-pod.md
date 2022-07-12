@@ -3,7 +3,7 @@
 1. Make sure we have `myapp` namespace and the current context is set to the same.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl config get-contexts 
+$ kubectl config get-contexts 
 CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
 *         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   myapp
 ```
@@ -11,17 +11,17 @@ CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPAC
 2\. Try to deploy an ephemeral database server. This should fail because the MySQL image needs environment variables for its initial configuration.&#x20;
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create deployment mysql --image=docker.io/mysql --port 3306 
+$ kubectl create deployment mysql --image=docker.io/mysql --port 3306 
 deployment.apps/mysql created
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl expose deployment mysql 
+$ kubectl expose deployment mysql 
 service/mysql exposed
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get pods
+$ kubectl get pods
 NAME                     READY   STATUS             RESTARTS      AGE
 mysql-774b959dc4-bcrqn   0/1     CrashLoopBackOff   1 (16s ago)   24s
 ```
@@ -33,7 +33,7 @@ As your instructor to dive deeper into the mysql image to show how these checks 
 {% endhint %}
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl logs mysql-774b959dc4-bcrqn 
+$ kubectl logs mysql-774b959dc4-bcrqn 
 2022-07-02 22:51:29+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.0.29-1debian10 started.
 2022-07-02 22:51:29+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
 2022-07-02 22:51:29+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.0.29-1debian10 started.
@@ -48,19 +48,19 @@ As your instructor to dive deeper into the mysql image to show how these checks 
 4\. Let's create another pod which is our frontend application
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create deployment friends --image=quay.io/mask365/friends:latest --port 8080 
+$ kubectl create deployment friends --image=quay.io/mask365/friends:latest --port 8080 
 deployment.apps/friends created
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl expose deployment friends --type NodePort 
+$ kubectl expose deployment friends --type NodePort 
 service/friends exposed
 ```
 
 5\. This is what we have
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get pods,service
+$ kubectl get pods,service
 NAME                           READY   STATUS             RESTARTS      AGE
 pod/friends-578684d7d9-6b2nm   1/1     Running            0             2m57s
 pod/mysql-774b959dc4-bcrqn     0/1     CrashLoopBackOff   6 (92s ago)   7m42s
@@ -74,17 +74,17 @@ service/mysql     ClusterIP   10.96.101.125   <none>        3306/TCP         7m2
 6\. Create a config map and secret with the required environment variables and connection information to access a MySQL database.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create configmap mycm1 --from-literal=MYSQL_DATABASE=friends --from-literal=DBHOST=mysql
+$ kubectl create configmap mycm1 --from-literal=MYSQL_DATABASE=friends --from-literal=DBHOST=mysql
 configmap/mycm1 created
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create secret generic mysec1 --from-literal=MYSQL_USER=user1 --from-literal=MYSQL_PASSWORD=da4456dfg112 --from-literal=MYSQL_ROOT_PASSWORD=bhy123o5848kasjaj
+$ kubectl create secret generic mysec1 --from-literal=MYSQL_USER=user1 --from-literal=MYSQL_PASSWORD=da4456dfg112 --from-literal=MYSQL_ROOT_PASSWORD=bhy123o5848kasjaj
 secret/mysec1 created
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get configmaps mycm1 -o yaml
+$ kubectl get configmaps mycm1 -o yaml
 apiVersion: v1
 data:
   DBHOST: mysql
@@ -96,11 +96,11 @@ metadata:
   namespace: myapp
   resourceVersion: "679035"
   uid: ebd5e911-ef31-41e2-83b7-fdc4dff4af28
-[centos@ip-10-0-2-94 ~]$ 
+
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get secrets mysec1 -o yaml
+$ kubectl get secrets mysec1 -o yaml
 apiVersion: v1
 data:
   MYSQL_PASSWORD: ZGE0NDU2ZGZnMTEy
@@ -114,23 +114,23 @@ metadata:
   resourceVersion: "679117"
   uid: 76eaacee-9171-4e98-b777-b3ded140b9ad
 type: Opaque
-[centos@ip-10-0-2-94 ~]$ 
+
 ```
 
 7\. Inject the config map and secret into the mysql deployment and check if the pod startup succeeds&#x20;
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl set env deployment mysql --from configmap/mycm1
+$ kubectl set env deployment mysql --from configmap/mycm1
 deployment.apps/mysql env updated
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl set env deployment mysql --from secret/mysec1
+$ kubectl set env deployment mysql --from secret/mysec1
 deployment.apps/mysql env updated
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get pods
+$ kubectl get pods
 NAME                       READY   STATUS    RESTARTS   AGE
 friends-578684d7d9-6b2nm   1/1     Running   0          12m
 mysql-5589cbf9fc-w49bg     1/1     Running   0          22s
@@ -139,40 +139,40 @@ mysql-5589cbf9fc-w49bg     1/1     Running   0          22s
 8\. Try accessing the friends application, it should still fail as we haven't injected the variables into the friends deployment.
 
 ```
-[centos@ip-10-0-2-94 ~]$ curl http://localhost:30787
+$ curl http://localhost:30787
 Connection failed: No such file or directory
 ```
 
 So, let's do it.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl set env deployment friends --from configmap/mycm1
+$ kubectl set env deployment friends --from configmap/mycm1
 deployment.apps/friends env updated
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl set env deployment friends --from secret/mysec1
+$ kubectl set env deployment friends --from secret/mysec1
 deployment.apps/friends env updated
 ```
 
 9\. Wait for a while for the pod to be redeployed and try accessing the application.
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get pods
+$ kubectl get pods
 NAME                       READY   STATUS    RESTARTS   AGE
 friends-6996f76d8b-n92kr   1/1     Running   0          57s
 mysql-5589cbf9fc-w49bg     1/1     Running   0          3m13s
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ curl http://localhost:30787
+$ curl http://localhost:30787
 <img width='500' src='friends.jpg' /><h1>List of Friends from 10.244.44.52</h1><br><br><p>0 results</p>[centos@ip-10-0-2-94 ~]$ 
 ```
 
 10\. Inspect any one of the deployments to see how the environment variables are referenced
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl describe deployments mysql 
+$ kubectl describe deployments mysql 
 Name:                   mysql
 Namespace:              myapp
 ...
@@ -188,7 +188,7 @@ Namespace:              myapp
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get deployments.apps friends -o yaml
+$ kubectl get deployments.apps friends -o yaml
 apiVersion: apps/v1
 kind: Deployment
 ...
@@ -225,7 +225,7 @@ kind: Deployment
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl exec mysql-5589cbf9fc-w49bg -- env|grep MYSQL
+$ kubectl exec mysql-5589cbf9fc-w49bg -- env|grep MYSQL
 MYSQL_USER=user1
 MYSQL_DATABASE=friends
 MYSQL_PASSWORD=da4456dfg112
@@ -242,7 +242,7 @@ MYSQL_VERSION=8.0.29-1debian10
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl exec friends-6996f76d8b-n92kr -- env|grep MYSQL
+$ kubectl exec friends-6996f76d8b-n92kr -- env|grep MYSQL
 MYSQL_USER=user1
 MYSQL_PASSWORD=da4456dfg112
 MYSQL_DATABASE=friends
@@ -260,12 +260,12 @@ MYSQL_PORT=tcp://10.96.101.125:3306
 11\. Create another secret from a file `~/kubernetes-101/labs/secrets/secretfile.txt`
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create secret generic mysec2 --from-file=kubernetes-101/labs/secrets/secretfile.txt
+$ kubectl create secret generic mysec2 --from-file=kubernetes-101/labs/secrets/secretfile.txt
 secret/mysec2 created
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl describe secrets mysec2
+$ kubectl describe secrets mysec2
 Name:         mysec2
 Namespace:    myapp
 Labels:       <none>
@@ -281,7 +281,7 @@ secretfile.txt:  99 bytes
 12\. Create a pod that references this secret as a volume
 
 ```
-[centos@ip-10-0-2-94 ~]$ cat ~/kubernetes-101/labs/secrets/secret-pod.yml 
+$ cat ~/kubernetes-101/labs/secrets/secret-pod.yml 
 apiVersion: v1
 kind: Pod
 metadata:
@@ -299,16 +299,16 @@ spec:
     volumeMounts:
     - name: secret-vol
       mountPath: "/etc/sssh"
-[centos@ip-10-0-2-94 ~]$ 
+
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl create -f ~/kubernetes-101/labs/secrets/secret-pod.yml
+$ kubectl create -f ~/kubernetes-101/labs/secrets/secret-pod.yml
 pod/secret-pod created
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl get pods
+$ kubectl get pods
 NAME                       READY   STATUS    RESTARTS   AGE
 friends-6996f76d8b-n92kr   1/1     Running   0          29m
 mysql-5589cbf9fc-w49bg     1/1     Running   0          31m
@@ -364,13 +364,13 @@ kind: Secret
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl exec secret-pod -- ls /etc/sssh
+$ kubectl exec secret-pod -- ls /etc/sssh
 anothersecret.txt
 secretfile.txt
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl exec secret-pod -- cat /etc/sssh/anothersecret.txt
+$ kubectl exec secret-pod -- cat /etc/sssh/anothersecret.txt
 Another top secret file
 ```
 
@@ -381,7 +381,7 @@ Changes to volumes are synced within a minute whereas changes to the environment
 15\. Clean Up
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl delete all --all -n myapp
+$ kubectl delete all --all -n myapp
 pod "friends-6996f76d8b-n92kr" deleted
 pod "mysql-5589cbf9fc-w49bg" deleted
 pod "secret-pod" deleted
@@ -397,13 +397,13 @@ deployment.apps "mysql" deleted
 {% endhint %}
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl delete configmaps --all
+$ kubectl delete configmaps --all
 configmap "kube-root-ca.crt" deleted
 configmap "mycm1" deleted
 ```
 
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl delete secrets --all
+$ kubectl delete secrets --all
 secret "mysec1" deleted
 secret "mysec2" deleted
 ```

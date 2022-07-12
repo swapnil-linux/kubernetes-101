@@ -22,26 +22,10 @@ kubectl create namespace myapp
 kubectl get pods -n myapp
 ```
 
-**OUTPUT:**
-
-```
-[centos@ip-10-0-2-94 ~]$ kubectl get pods -n myapp
-No resources found in myapp namespace.
-[centos@ip-10-0-2-94 ~]$ 
-```
-
 3\. You’ll be using the following Pod manifest to create pod in myapp namespace. It’s available in the book’s GitHub repo under the labs/pods folder called pod.yml
 
 ```
 kubectl create -f kubernetes-101/labs/pods/pods.yml -n myapp
-```
-
-**OUTPUT**:
-
-```
-[centos@ip-10-0-2-94 ~]$ kubectl create -f kubernetes-101/labs/pods/pods.yml -n myapp 
-pod/hello-pod created
-[centos@ip-10-0-2-94 ~]$ 
 ```
 
 4\. Run a `kubectl get pods` to check the status.
@@ -329,7 +313,7 @@ lrwxrwxrwx. 1 root root 0 Jun 21 05:00 uts -> uts:[4026532499]
 ```
 
 {% hint style="info" %}
-alternatively you can also use `sudo lsns -p <pid>` to list namespaces
+alternatively you can also use `sudo lsns -p <pid>` command to list namespaces
 {% endhint %}
 
 19\. Cleanup
