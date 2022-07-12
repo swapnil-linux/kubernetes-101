@@ -14,7 +14,7 @@ Before we understand Kubernetes, we must be familiar with Docker containers or e
 * If the operations engineers were lucky, they even got a somewhat accurate document with installation instructions from the developers. So far, so good, and life was easy.
 * But things get a bit out of hand when, in an enterprise, there are many teams of developers that create quite different types of application, yet all of them need to be installed on the same production servers and kept running there.
 
-![](<../.gitbook/assets/image (7).png>)
+![](<../.gitbook/assets/image (7) (1).png>)
 
 * Usually, each application has some external dependencies, such as which framework it was built on, what libraries it uses, and so on. Sometimes, two applications use the same framework but in different versions that might or might not be compatible with each other.
 * So, installing a new version of a certain application can be a complex project on its own, and often needed months of planning and testing
