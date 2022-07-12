@@ -2,7 +2,7 @@
 
 1. Configure kubernetes repo
 
-```
+```bash
 cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
@@ -16,7 +16,7 @@ EOF
 
 2\. Set SELinux in permissive mode (effectively disabling it)
 
-```
+```bash
 sudo setenforce 0
 ```
 
@@ -112,10 +112,13 @@ echo $(hostname -I) $(hostname) | sudo tee -a /etc/hosts
 
 ```
 sudo kubeadm config images pull -v=1
+```
+
+```
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16,2001:db8:42:0::/56 --cri-socket=unix:///run/crio/crio.sock --service-cidr=10.96.0.0/16,2001:db8:42:1::/112
 ```
 
-
+<mark style="background-color:blue;">**OUTPUT:**</mark>
 
 ```
 [init] Using Kubernetes version: v1.24.1
@@ -221,6 +224,8 @@ kubectl get nodes
 kubectl get pods --all-namespaces
 ```
 
+<mark style="background-color:blue;">**OUTPUT:**</mark>
+
 ```
 NAME                                           STATUS   ROLES           AGE   VERSION
 ip-10-0-2-94.ap-southeast-2.compute.internal   Ready    control-plane   30m   v1.24.2
@@ -242,7 +247,7 @@ kube-system   kube-scheduler-ip-10-0-2-94.ap-southeast-2.compute.internal       
 curl https://projectcalico.docs.tigera.io/manifests/calico.yaml -O
 ```
 
-We will enabled IPv6 in calico,
+We will enable IPv6 in calico,
 
 ```
 diff ~/calico.yaml ~/kubernetes-101/labs/install/calico.yaml
@@ -293,7 +298,7 @@ apply          cluster-info   cp             drain          get            patch
 
 ### &#x20;Last Step
 
-Clone the git repo which includes the files required for further lab exercies.
+Clone the git repo which includes the files required for further lab exercises.
 
 ```
 git clone https://github.com/swapnil-linux/kubernetes-101

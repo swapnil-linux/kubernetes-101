@@ -74,15 +74,18 @@ sudo sysctl --system
 2\. List the existing tokens on the control plane node
 
 ```
-[centos@ip-10-0-2-94 ~]$ sudo kubeadm token list
-TOKEN                     TTL         EXPIRES                USAGES                   DESCRIPTION                                                EXTRA GROUPS
-b57zm1.y21874qrg3ybca94   23h         2022-07-04T01:07:21Z   authentication,signing   <none>                                                     system:bootstrappers:kubeadm:default-node-token
+sudo kubeadm token list
 ```
 
-3\. Generate a new token with a short ttl which we will use to join our nodes to the cluster.
+3\. Generate a new token with a short TTL which we will use to join our nodes to the cluster.
 
 ```
-[centos@ip-10-0-2-94 ~]$ sudo kubeadm token create --print-join-command --ttl 60m 
+sudo kubeadm token create --print-join-command --ttl 60m 
+```
+
+**OUTPUT:**
+
+```
 kubeadm join 10.0.2.94:6443 --token 71oeqm.nh69zj2pzwhzoabq --discovery-token-ca-cert-hash sha256:2cd25f812a5a5a1fd87aa31cf548d04f44a1f9d44b24b64878f32ef688bc948c 
 ```
 
@@ -93,10 +96,15 @@ TOKEN                     TTL         EXPIRES                USAGES             
 b57zm1.y21874qrg3ybca94   23h         2022-07-04T01:07:21Z   authentication,signing   <none>                                                     system:bootstrappers:kubeadm:default-node-token
 ```
 
-4\. Copy the join command and paste on both nodes.
+4\. Copy the join command and paste it on all nodes.
 
 ```
-[centos@ip-10-0-2-184 ~]$ sudo kubeadm join 10.0.2.94:6443 --token 71oeqm.nh69zj2pzwhzoabq --discovery-token-ca-cert-hash sha256:2cd25f812a5a5a1fd87aa31cf548d04f44a1f9d44b24b64878f32ef688bc948c 
+sudo kubeadm join 10.0.2.94:6443 --token 71oeqm.nh69zj2pzwhzoabq --discovery-token-ca-cert-hash sha256:2cd25f812a5a5a1fd87aa31cf548d04f44a1f9d44b24b64878f32ef688bc948c 
+```
+
+**OUTPUT:**
+
+```
 [preflight] Running pre-flight checks
 [preflight] Reading configuration from the cluster...
 [preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -o yaml'
@@ -117,11 +125,21 @@ Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
 5\. To verify the nodes were successfully joined run the below commands
 
 ```
+kubectl get nodes
+```
+
+{% code title="OUTPUT" %}
+```
 [centos@ip-10-0-2-94 ~]$ kubectl get nodes
 NAME                                            STATUS   ROLES           AGE     VERSION
 ip-10-0-2-184.ap-southeast-2.compute.internal   Ready    <none>          2m12s   v1.24.2
 ip-10-0-2-77.ap-southeast-2.compute.internal    Ready    <none>          43s     v1.24.2
 ip-10-0-2-94.ap-southeast-2.compute.internal    Ready    control-plane   6d14h   v1.24.2
+```
+{% endcode %}
+
+```
+kubectl get pods --all-namespaces  -o wide
 ```
 
 ```
