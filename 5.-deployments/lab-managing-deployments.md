@@ -274,7 +274,7 @@ Scaling App V3: POD IP: 10.85.0.42
 14\. The following command uses `kubectl rollout` to revert the application to `revision 1`.
 
 ```
-$ kubectl rollout undo deployment scaling --to-revision=1 ; kubectl rollout status deployment scaling
+kubectl rollout undo deployment scaling --to-revision=1 ; kubectl rollout status deployment scaling
 ```
 
 {% code title="OUTPUT" %}
