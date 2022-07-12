@@ -7,7 +7,8 @@
 
 1. Follow steps 1 to 9 from the previous lab on all the additional node.
 
-```
+{% code title="COMMAND" %}
+```bash
 ## Add K8S repo
 
 cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
@@ -70,40 +71,57 @@ EOF
 
 sudo sysctl --system
 ```
+{% endcode %}
 
 2\. List the existing tokens on the control plane node
 
+{% code title="COMMAND" %}
 ```
 sudo kubeadm token list
 ```
+{% endcode %}
 
 3\. Generate a new token with a short TTL which we will use to join our nodes to the cluster.
 
+{% code title="COMMAND" %}
 ```
 sudo kubeadm token create --print-join-command --ttl 60m 
 ```
+{% endcode %}
 
-**OUTPUT:**
-
+{% code title="OUTPUT" %}
 ```
+[centos@ip-10-0-2-94 ~]$ sudo kubeadm token create --print-join-command --ttl 60m
 kubeadm join 10.0.2.94:6443 --token 71oeqm.nh69zj2pzwhzoabq --discovery-token-ca-cert-hash sha256:2cd25f812a5a5a1fd87aa31cf548d04f44a1f9d44b24b64878f32ef688bc948c 
 ```
+{% endcode %}
 
+{% code title="COMMAND" %}
+```
+sudo kubeadm token list
+```
+{% endcode %}
+
+{% code title="OUTPUT" %}
 ```
 [centos@ip-10-0-2-94 ~]$ sudo kubeadm token list
 TOKEN                     TTL         EXPIRES                USAGES                   DESCRIPTION                                                EXTRA GROUPS
 71oeqm.nh69zj2pzwhzoabq   56m         2022-07-03T02:09:15Z   authentication,signing   <none>                                                     system:bootstrappers:kubeadm:default-node-token
 b57zm1.y21874qrg3ybca94   23h         2022-07-04T01:07:21Z   authentication,signing   <none>                                                     system:bootstrappers:kubeadm:default-node-token
 ```
+{% endcode %}
 
 4\. Copy the join command and paste it on all nodes.
 
+{% code title="COMMAND" %}
 ```
 sudo kubeadm join 10.0.2.94:6443 --token 71oeqm.nh69zj2pzwhzoabq --discovery-token-ca-cert-hash sha256:2cd25f812a5a5a1fd87aa31cf548d04f44a1f9d44b24b64878f32ef688bc948c 
 ```
+{% endcode %}
 
-**OUTPUT:**
 
+
+{% code title="OUTPUT" %}
 ```
 [preflight] Running pre-flight checks
 [preflight] Reading configuration from the cluster...
@@ -121,12 +139,15 @@ Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
 
 [centos@ip-10-0-2-184 ~]$ 
 ```
+{% endcode %}
 
 5\. To verify the nodes were successfully joined run the below commands
 
+{% code title="COMMAND" %}
 ```
 kubectl get nodes
 ```
+{% endcode %}
 
 {% code title="OUTPUT" %}
 ```
@@ -138,10 +159,13 @@ ip-10-0-2-94.ap-southeast-2.compute.internal    Ready    control-plane   6d14h  
 ```
 {% endcode %}
 
+{% code title="COMMAND" %}
 ```
 kubectl get pods --all-namespaces  -o wide
 ```
+{% endcode %}
 
+{% code title="OUTPUT" %}
 ```
 [centos@ip-10-0-2-94 ~]$ kubectl get pods --all-namespaces  -o wide
 NAMESPACE     NAME                                                                   READY   STATUS    RESTARTS   AGE     IP            NODE                                            NOMINATED NODE   READINESS GATES
@@ -161,19 +185,30 @@ kube-system   kube-scheduler-ip-10-0-2-94.ap-southeast-2.compute.internal       
 [centos@ip-10-0-2-94 ~]$ 
 
 ```
+{% endcode %}
 
 6\. A node role is just a label, assign role worker to the new nodes. This is an optional step.
 
+{% code title="COMMAND" %}
 ```
-[centos@ip-10-0-2-94 ~]$ kubectl label nodes ip-10-0-2-77.ap-southeast-2.compute.internal node-role.kubernetes.io/worker=
-node/ip-10-0-2-77.ap-southeast-2.compute.internal labeled
+kubectl label nodes ip-10-0-2-77.ap-southeast-2.compute.internal node-role.kubernetes.io/worker=
 ```
+{% endcode %}
 
+{% code title="OUTPUT" %}
 ```
 [centos@ip-10-0-2-94 ~]$ kubectl label nodes ip-10-0-2-184.ap-southeast-2.compute.internal node-role.kubernetes.io/worker=
 node/ip-10-0-2-184.ap-southeast-2.compute.internal labeled
 ```
+{% endcode %}
 
+{% code title="COMMAND" %}
+```bash
+kubectl get nodes
+```
+{% endcode %}
+
+{% code title="OUTPUT" %}
 ```
 [centos@ip-10-0-2-94 ~]$ kubectl get nodes
 NAME                                            STATUS   ROLES           AGE     VERSION
@@ -181,6 +216,7 @@ ip-10-0-2-184.ap-southeast-2.compute.internal   Ready    worker          9m17s  
 ip-10-0-2-77.ap-southeast-2.compute.internal    Ready    worker          7m48s   v1.24.2
 ip-10-0-2-94.ap-southeast-2.compute.internal    Ready    control-plane   6d14h   v1.24.2
 ```
+{% endcode %}
 
 {% hint style="info" %}
 You can choose your node to have any role like `node-role.kubernetes.io/testing=` and `node-role.kubernetes.io/dev=`... The column ROLES will display the value(s) separated by comma in case multiple values exist&#x20;
