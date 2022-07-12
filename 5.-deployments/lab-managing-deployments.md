@@ -17,9 +17,7 @@ CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPAC
 2\. Create a yaml file for deployment named scaling using `quay.io/mask365/scaling:latest` image using the below command.&#x20;
 
 ```
-kubectl create deployment scaling --image=quay.io/mask365/scaling:v1 \ 
---port 8080 --dry-run=client --output yaml | \ 
-tee /tmp/scaling-deploy.yml
+kubectl create deployment scaling --image=quay.io/mask365/scaling:v1 --port 8080 --dry-run=client --output yaml | tee /tmp/scaling-deploy.yml
 ```
 
 3\. Edit the yaml to change the `replicas` to `3` and add label as `env=prod`for both deployment and pods specs.
