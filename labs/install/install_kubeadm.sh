@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Add K8S repo
+## Add Kubernetes repo
 
 cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
