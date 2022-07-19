@@ -56,9 +56,9 @@ Note: replace the version with the current major version of Kunernetes.
 ```
 export VERSION=1.24
 
-sudo curl -4 -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/CentOS_7/devel:kubic:libcontainers:stable.repo
+sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/CentOS_7/devel:kubic:libcontainers:stable.repo
 
-sudo curl -4 -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:${VERSION}.repo https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:${VERSION}/CentOS_7/devel:kubic:libcontainers:stable:cri-o:${VERSION}.repo
+sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:${VERSION}.repo https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:${VERSION}/CentOS_7/devel:kubic:libcontainers:stable:cri-o:${VERSION}.repo
 
 ```
 {% endcode %}
@@ -86,7 +86,7 @@ sudo systemctl enable --now crio
 ```
 {% endcode %}
 
-7\. Make sure that the `br_netfilter` the module is loaded. This can be done by running
+7\. Make sure that the `br_netfilter` module is loaded. This can be done by running
 
 {% code title="COMMAND" %}
 ```
@@ -94,7 +94,7 @@ lsmod | grep br_netfilter
 ```
 {% endcode %}
 
-Since `br_netfilter` is not in the loaded state, let's load this module manually:
+Since `br_netfilter` is not in the loaded state, lets load this module manually:
 
 {% code title="COMMAND" %}
 ```
@@ -295,14 +295,6 @@ curl https://projectcalico.docs.tigera.io/manifests/calico.yaml -O
 ```
 {% endcode %}
 
-Clone the git repo, which includes the files required for further lab exercises.
-
-{% code title="COMMAND" %}
-```
-git clone https://github.com/swapnil-linux/kubernetes-101
-```
-{% endcode %}
-
 We will enable IPv6 in calico,
 
 {% code title="COMMAND" %}
@@ -317,7 +309,7 @@ kubectl create -f ~/kubernetes-101/labs/install/calico.yaml
 ```
 {% endcode %}
 
-
+###
 
 ### Enable Shell auto-completion
 
@@ -366,3 +358,12 @@ apply          cluster-info   cp             drain          get            patch
 ```
 {% endcode %}
 
+### &#x20;Last Step
+
+Clone the git repo which includes the files required for further lab exercises.
+
+{% code title="COMMAND" %}
+```
+git clone https://github.com/swapnil-linux/kubernetes-101
+```
+{% endcode %}
