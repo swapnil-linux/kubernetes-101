@@ -30,7 +30,10 @@ Context "kubernetes-admin@kubernetes" modified.
 Install Helm
 
 ```
-curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+curl -4 https://get.helm.sh/helm-v3.9.1-linux-amd64.tar.gz -O
+tar xzvf helm-v3.9.1-linux-amd64.tar.gz
+sudo mv linux-amd64/helm /usr/local/bin/
+
 ```
 
 The NFS subdir external provisioner is an automatic provisioner for Kubernetes that uses your _already configured_ NFS server, automatically creating Persistent Volumes.
