@@ -317,7 +317,11 @@ kubectl create -f ~/kubernetes-101/labs/install/calico.yaml
 ```
 {% endcode %}
 
+Enable IPV6 masquarading, this should be done by kube-proxy, but due to some reason it did'nt :(&#x20;
 
+```
+sudo ip6tables -t nat -A POSTROUTING -o eth0  -j MASQUERADE
+```
 
 ### Enable Shell auto-completion
 
