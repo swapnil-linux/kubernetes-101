@@ -82,9 +82,9 @@ Kubernetes supports three access modes for volumes.
 
 • ReadWriteOnce (RWO)&#x20;
 
-• ReadWriteMany (RWM)&#x20;
+• ReadWriteMany (RWX)&#x20;
 
-• ReadOnlyMany (ROM)
+• ReadOnlyMany (ROX)
 
 `ReadWriteOnce` defines a PV that can only be bound as R/W by a single PVC. Attempts to bind it from multiple PVCs will fail.
 
